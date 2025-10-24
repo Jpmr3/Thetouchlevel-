@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The Touch Level — Compra directa</title>
+<meta name="description" content="The Touch Level: Productos digitales y servicios con entrega inmediata. Compra con PayPal o Transferencia segura.">
+<meta property="og:title" content="The Touch Level — Compra directa"/>
+<meta property="og:description" content="Compra productos digitales y servicios con entrega inmediata. Pagos fáciles y seguros."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://autopitchone.vercel.app/"/>
+<meta property="og:image" content="https://autopitchone.vercel.app/og-image.png"/>
+<style>
+:root{color-scheme:dark light}
+body{font-family:system-ui,-apple-system,Inter,Roboto,sans-serif;margin:0;background:#0f1116;color:#eef;scroll-behavior:smooth}
+header{background:#1b2028;border-bottom:1px solid #2a3140;padding:20px 16px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
+header h1{margin:0;font-size:1.6rem;color:#3daee9}
+main{max-width:1120px;margin:0 auto;padding:16px}
+h2,h3{margin:.5rem 0}
+section{background:#141820;border:1px solid #2a3140;border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:#12161d;border:1px solid #2a3140;border-radius:12px;padding:14px}
+button, input, select{border-radius:10px;border:1px solid #2a3140;background:#141820;color:#eef;padding:10px 12px}
+button{cursor:pointer;font-weight:800}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.price{font-size:20px;font-weight:800;margin:6px 0}
+.pill{display:inline-block;border:1px solid #2a3140;border-radius:999px;padding:4px 8px;font-size:.86rem}
+.muted{opacity:.75}
+a.btn{text-decoration:none;color:#eef;padding:8px 12px;background:#3daee9;border-radius:8px;display:inline-block}
+footer{margin-top:24px;text-align:center;font-size:.9rem;color:#999}
+input:focus, select:focus{outline:none;border-color:#3daee9}
+</style>
+</head>
+<body>
+<header>
+  <h1>The Touch Level</h1>
+  <div class="row">
+    <select id="curSel">
+      <option value="EUR" selected>EUR €</option>
+      <option value="USD">USD $</option>
+      <option value="GBP">GBP £</option>
+      <option value="BRL">BRL R$</option>
+      <option value="MXN">MXN $</option>
+    </select>
+  </div>
+</header>
+<main>
+<section style="text-align:center">
+  <h2>Compra productos y servicios digitales con entrega inmediata</h2>
+  <p class="muted">Pagos seguros y directos con PayPal o Transferencia.</p>
+</section>
+<section>
+<h2>Productos disponibles</h2>
+<div class="grid" id="catalog"></div>
+</section>
+<section>
+<h2>Métodos de pago</h2>
+<div class="grid">
+  <div class="card">
+    <h3>PayPal</h3>
+    <p class="muted">Pago inmediato y seguro</p>
+    <input id="paypalMe" value="https://paypal.me/nostrodamus777"/>
+  </div>
+  <div class="card">
+    <h3>Transferencia</h3>
+    <p class="muted">Cuenta segura: ES36**********485511</p>
+  </div>
+</div>
+</section>
+<section>
+<h2>Métricas rápidas</h2>
+<div class="grid">
+  <div class="card"><p>Ingresos hoy: <span id="k_cash">0</span></p></div>
+  <div class="card"><p>Clics: <span id="k_clicks">0</span></p></div>
+  <div class="card"><p>Leads calientes: <span id="k_hot">0</span></p></div>
+</div>
+</section>
+<section>
+<h2>Contacto</h2>
+<p class="muted">Escríbenos a: contacto@thetouchlevel.com</p>
+<p class="muted">Tel: +34 600 000 000</p>
+</section>
+<section>
+<h2>Quiénes somos</h2>
+<p class="muted">The Touch Level es líder en productos digitales y servicios con entrega inmediata. Operamos a nivel mundial ofreciendo métodos de pago sencillos y seguros.</p>
+</section>
+<section>
+<h2>Cómo operamos</h2>
+<p class="muted">Ofrecemos un sistema de pago rápido, multimoneda y multilenguaje. No necesitas registrarte, solo selecciona tu producto y paga.</p>
+</section>
+<footer>
+&copy; 2025 The Touch Level. Todos los derechos reservados.
+</footer>
+<script>
+const BASE=[
+  {sku:'pack-59',name:'Template Pack',eur:59},
+  {sku:'dfy-299',name:'DFY 5 plantillas',eur:299},
+  {sku:'ultimate-99',name:'Ultimate Pack',eur:99},
+  {sku:'prompt-49',name:'Prompt Pack IA',eur:49},
+  {sku:'starter-19',name:'Starter Bundle',eur:19},
+  {sku:'annual-149',name:'Annual Club',eur:149}
+];
+const state={cur:'EUR',paypal:'https://paypal.me/nostrodamus777'};
+const FX={EUR:{USD:1.08,GBP:0.85,BRL:5.8,MXN:19.8}};
+function $(s){return document.querySelector(s)}
+function fx(eur){return state.cur==='EUR'?eur:Math.round(eur*(FX.EUR[state.cur]||1)*100)/100}
+function sym(c){return c==='USD'?'$':c==='GBP'?'£':c==='BRL'?'R$':'€'}
+function renderStore(){
+  const wrap=$('#catalog'); wrap.innerHTML='';
+  BASE.forEach(p=>{
+    const price=fx(p.eur);
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`<h3>${p.name}</h3>
+    <div class="price">${sym(state.cur)}${price.toFixed(2)}</div>
+    <div class="btns">
+    <a class="btn" target="_blank" href="${state.paypal}/${p.eur}">Pagar con PayPal</a>
+    <button class="btn">Transfer</button>
+    </div>`;
+    wrap.appendChild(card);
+  })
+}
+$('#curSel').onchange=e=>{state.cur=e.target.value; renderStore()}
+renderStore();
+</script>
+</body>
+</html>
